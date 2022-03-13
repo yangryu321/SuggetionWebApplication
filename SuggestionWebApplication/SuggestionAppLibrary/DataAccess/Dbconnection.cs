@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SuggestionAppLibrary.Models
+namespace SuggestionAppLibrary.DataAccess
 {
-
-    public class SuggestionModel
+    public class Dbconnection
     {
 
     }
-
 }
