@@ -1,0 +1,158 @@
+﻿@page "/SampleData"
+
+@using SuggestionAppLibrary.DataAccess
+@using SuggestionAppLibrary.Models
+
+@inject ICategoryData categoryData
+@inject IStatusData statusData
+@inject ISuggestionData suggestionData
+@inject IUserData userData
+
+
+<h3>Sample Data</h3>
+
+
+
+@if (categoriesCreated)
+{
+    <h4>
+        Categories have been created
+    </h4>
+
+}
+else
+{
+    <button class="btn btn-primary" @onclick="CreateCategories">
+        Create Categories
+    </button>
+
+}
+
+
+
+@if (statusesCreated)
+{
+    <h4>
+        Statuses have been created
+    </h4>
+
+}
+else
+{
+    <button class="btn btn-primary" @onclick="CreateStatuses">
+        Create Statuses
+    </button>
+
+}
+
+@code {
+
+    private bool categoriesCreated = false;
+    private bool statusesCreated = false;
+
+    //create categories with a button(testing purpose)
+    private async Task CreateCategories()
+    {
+
+        var categories = await categoryData.GetAllCategories();
+
+        if (categories?.Count > 0)
+        {
+            return;
+        }
+
+        //create a Category model
+        CategoryModel model = new CategoryModel()
+        {
+            CategoryName = "Backgrond story",
+            CategoryDescription = "Background story of each character"
+        };
+
+        //store it in database
+        await categoryData.CreateCategory(model);
+
+        model = new CategoryModel()
+        {
+            CategoryName = "Combo list",
+            CategoryDescription = "Combo of each character"
+
+        };
+
+        await categoryData.CreateCategory(model);
+
+        model = new CategoryModel()
+        {
+            CategoryName = "Other",
+            CategoryDescription = "Other stuff"
+
+        };
+
+        await categoryData.CreateCategory(model);
+
+        categoriesCreated = true;
+    }
+
+    //creat statuses with a button(testing purpose)
+    private async Task CreateStatuses()
+    {
+        var statuses = await statusData.GetAllStatuses();
+
+        if (statuses?.Count > 0)
+        {
+            return;
+        }
+
+
+        StatusModel model = new StatusModel()
+        {
+            StatusName = "Completed",
+            StatusDescription = "The suggestion was accepted"
+
+        };
+
+        await statusData.CreateStatus(model);
+
+
+        model = new StatusModel()
+        {
+            StatusName = "Watching",
+            StatusDescription = "The suggestion is being discussed"
+
+        };
+
+        await statusData.CreateStatus(model);
+
+        model = new StatusModel()
+        {
+            StatusName = "Upcoming",
+            StatusDescription = "The suggestion was accepted and being released soon"
+
+        };
+
+        await statusData.CreateStatus(model);
+
+
+        model = new StatusModel()
+        {
+            StatusName = "Dismissed",
+            StatusDescription = "The suggestion was rejected"
+
+        };
+
+        await statusData.CreateStatus(model);
+
+        statusesCreated = true;
+
+    }
+
+    private async Task GenerateSampleData()
+    {
+        UserModel user = new UserModel()
+        {
+            
+        };
+
+    }
+
+
+}
