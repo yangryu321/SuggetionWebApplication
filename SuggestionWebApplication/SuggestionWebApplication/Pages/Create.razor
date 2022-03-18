@@ -2,7 +2,7 @@
 @using SuggestionAppLibrary.DataAccess
 @using SuggestionAppLibrary.Models
 @using SuggestionWebApplication.Models
-
+@using SuggestionWebApplication.Components
 @inject ISuggestionData suggestionData
 @inject ICategoryData categoryData
 @inject IUserData userData
@@ -35,7 +35,7 @@
                     <label for="category">Category</label>
                     <div>Choose one category</div>
                     <div>
-                        <InputRadioGroup id="category" @bind-Value="suggestion.CategoryId">
+                        <MyInputRadioGroup id="category" @bind-Value="suggestion.CategoryId">
                             @foreach (var option in categories)
                                 {
                                 <div>
@@ -46,7 +46,7 @@
 
                                 }
 
-                        </InputRadioGroup>
+                        </MyInputRadioGroup>
                     </div>
 
                 </div>
@@ -61,7 +61,7 @@
                     <InputTextArea id="description" @bind-Value="suggestion.Description" />
                 </div>
                 <div>
-                    <button type="submit">
+                    <button type="submit" @onclick="CreateSuggestion">
                         Suggest
                     </button>
                 </div>
