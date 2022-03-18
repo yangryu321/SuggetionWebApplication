@@ -164,5 +164,20 @@ namespace SuggestionAppLibrary.DataAccess
 
         }
 
+        public async Task<List<SuggestionModel>> GetSuggestionsByUser(string userId)
+        {
+            var result = _cache.Get<List<SuggestionModel>>(userId);
+
+            if (result ==null)
+            {
+                var output = await _suggestions.FindAsync(x => x.Author.Id == userId);
+                result = output.ToList();
+                _cache.Set(userId, result, TimeSpan.FromMinutes(1));
+
+            }
+
+            return result;
+        }
+
     }
 }
