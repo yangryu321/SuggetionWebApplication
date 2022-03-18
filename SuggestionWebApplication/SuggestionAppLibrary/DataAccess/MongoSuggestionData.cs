@@ -147,7 +147,7 @@ namespace SuggestionAppLibrary.DataAccess
 
                 var userCollectionInTransaction = db.GetCollection<UserModel>(_db.UserCollectionName);
                 var user = (await userCollectionInTransaction.FindAsync(x => x.Id == suggestion.Author.Id)).First();
-                user.VotedOnSuggestions.Add(item: new BasicSuggestionModel(suggestion));
+                user.AnchoredSuggestions.Add(item: new BasicSuggestionModel(suggestion));
                 await userCollectionInTransaction.ReplaceOneAsync(x => x.Id == user.Id, user);
 
                 await session.CommitTransactionAsync();

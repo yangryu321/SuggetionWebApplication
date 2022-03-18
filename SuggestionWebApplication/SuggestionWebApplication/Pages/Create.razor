@@ -1,0 +1,134 @@
+﻿@page "/Create"
+@using SuggestionAppLibrary.DataAccess
+@using SuggestionAppLibrary.Models
+@using SuggestionWebApplication.Models
+
+@inject ISuggestionData suggestionData
+@inject ICategoryData categoryData
+@inject IUserData userData
+@inject NavigationManager navManager
+
+
+
+
+
+<div>
+    <div>
+        <div>
+            <button type="button" @onclick="ClosePage"></button>
+        </div>
+        @if (categories is not null)
+        {
+            <EditForm Model="suggestion" OnInvalidSubmit="CreateSuggestion">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div>
+                    <label for="suggestion-text">
+                        Suggesion
+                    </label>
+                    <div>
+                        make a suggestion!
+                    </div>
+                    <InputText id="suggestion-text" @bind-Value="suggestion.Suggestion" />
+                </div>
+                <div>
+                    <label for="category">Category</label>
+                    <div>Choose one category</div>
+                    <div>
+                        <InputRadioGroup id="category" @bind-Value="suggestion.CategoryId">
+                            @foreach (var option in categories)
+                                {
+                                <div>
+                                    <InputRadio Value="@option.Id" id="@option.Id" />
+                                    <label for="@option.Id">@option.CategoryName-@option.CategoryDescription</label>
+
+                                </div>
+
+                                }
+
+                        </InputRadioGroup>
+                    </div>
+
+                </div>
+
+                <div>
+                    <label for="description">
+                        Description
+                    </label>
+                    <div>
+                        Describe your suggestion
+                    </div>
+                    <InputTextArea id="description" @bind-Value="suggestion.Description" />
+                </div>
+                <div>
+                    <button type="submit">
+                        Suggest
+                    </button>
+                </div>
+            </EditForm>
+        }
+
+
+
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+@code {
+
+    //to fetch suggestion data from UI and apply annotations on it
+    private SuggestionModelAnnotations suggestion = new SuggestionModelAnnotations();
+    private List<CategoryModel> categories;
+    private UserModel loggedInUser;
+
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        //get all categories
+        categories = await categoryData.GetAllCategories();
+
+        //create a user
+        loggedInUser = await userData.GetUserFromAuthentication("123-abc");
+
+    }
+
+
+
+    private async Task CreateSuggestion()
+    {
+        SuggestionModel s = new SuggestionModel();
+        //need a new SuggestionsModel for dataAnnotations
+        s.Suggestion = suggestion.Suggestion;
+        s.Description = suggestion.Description;
+        s.Author = new BasicUserModel(loggedInUser);
+        s.Category = categories.Where(x => x.Id == suggestion.CategoryId).FirstOrDefault();
+
+        if (s.Category is null)
+        {
+            suggestion.CategoryId = "";
+            return;
+
+        }
+
+        await suggestionData.CreateSuggestion(s);
+
+    }
+
+
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+    }
+
+
+
+}

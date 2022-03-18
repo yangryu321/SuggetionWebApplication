@@ -18,7 +18,7 @@ namespace SuggestionAppLibrary.Models
         public string Description { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
         public BasicUserModel Author { get; set; }
-        public string OnwerNotes { get; set; }
+        public string OwnerNotes { get; set; }
         public bool ApprovedForRelease { get; set; } = false;
         public bool Archived { get; set; } = false;
         public bool Rejected { get; set; } = false;

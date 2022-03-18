@@ -45,6 +45,13 @@ else
 
 }
 
+
+<button class="btn btn-primary" @onclick="GenerateSampleData">
+    Data generated
+</button>
+
+
+
 @code {
 
     private bool categoriesCreated = false;
@@ -147,11 +154,43 @@ else
 
     private async Task GenerateSampleData()
     {
+        //create  user
         UserModel user = new UserModel()
         {
-            
+            FirstName = "Shiyang",
+            LastName = "Liu",
+            DisplayName = "yangryu",
+            EmailAddress = "yangryu321@gmail.com",
+            ObjectIdentifier = "123-abc"
         };
 
+        //put the user in database
+        await userData.CreateUser(user);
+        var FindUser = await userData.GetUserFromAuthentication("123-abc");
+
+        SuggestionModel suggestion = new SuggestionModel()
+        {
+            Suggestion = "More combo",
+            Description = "Pleas add more combo",
+            Author = new BasicUserModel(FindUser),
+            Category = new CategoryModel()
+            {
+                CategoryName = "Combo list",
+                CategoryDescription = "Combo of each character"
+
+            },
+            SuggestionStatus = new StatusModel()
+            {
+                StatusName = "Upcoming",
+                StatusDescription = "The suggestion was accepted and being released soon"
+
+            },
+
+            ApprovedForRelease = true
+
+        };
+
+        await suggestionData.CreateSuggestion(suggestion);
     }
 
 
