@@ -35,7 +35,7 @@ namespace SuggestionAppLibrary.DataAccess
                 var result = await _suggestions.FindAsync(_ => true);
                 output = result.ToList();
 
-                _cache.Set(cacheName, output, TimeSpan.FromDays(value: 1));
+                _cache.Set(cacheName, output, TimeSpan.FromMinutes(value: 1));
             }
 
 
