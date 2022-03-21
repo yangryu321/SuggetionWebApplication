@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,8 +27,8 @@ namespace SuggestionWebApplication
         public void ConfigureServices(IServiceCollection services)
         {
             //not very necessary here
-            services.ConfigureServices();
-            
+            services.ConfigureServices(Configuration);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +49,22 @@ namespace SuggestionWebApplication
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseRewriter(
+                new RewriteOptions().Add(
+                    context =>
+                    {
+                        if (context.HttpContext.Request.Path == "/MicrosoftIdentity/Account/SignedOut")
+                        {
+                            context.HttpContext.Response.Redirect(location: "/");
+                        }
+                    }
+
+                ));
+
 
             app.UseEndpoints(endpoints =>
             {
