@@ -1,11 +1,12 @@
 ﻿@page "/Profile"
+@attribute [Authorize]
 @using SuggestionAppLibrary.DataAccess
 @using SuggestionAppLibrary.Models
 
 @inject IUserData userData
 @inject ISuggestionData suggesitonData
 @inject NavigationManager navManager
-
+@inject AuthenticationStateProvider authProvider
 
 <h1>
     Myprofile
@@ -26,7 +27,9 @@
         My account
     </h2>
     <p>
-        <a href="#">Edit My Profile</a>
+        <a href="MicrosoftIdentity/Account/EditProfile">
+            Edit My Profile
+        </a>
     </p>
 </div>
 
@@ -232,8 +235,10 @@
     protected async override Task OnInitializedAsync()
     {
 
-        //create a user
-        loggedInUser = await userData.GetUserFromAuthentication("123-abc");
+        var authState = await authProvider.GetAuthenticationStateAsync();
+        string objectId = authState.User.Claims.FirstOrDefault(x => x.Type.Contains("objectidentifier"))?.Value;
+        loggedInUser = await userData.GetUserFromAuthentication(objectId);
+
 
         if (loggedInUser != null)
         {

@@ -7,6 +7,7 @@ using SuggestionAppLibrary.DataAccess;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Identity.Web;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Identity.Web.UI;
 
 namespace SuggestionWebApplication
 {
@@ -16,9 +17,9 @@ namespace SuggestionWebApplication
         public static void ConfigureServices(this IServiceCollection services, IConfiguration Configuration)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor();
+            services.AddServerSideBlazor().AddMicrosoftIdentityConsentHandler();
             services.AddMemoryCache();
-
+            services.AddControllersWithViews().AddMicrosoftIdentityUI();
 
             services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
                .AddMicrosoftIdentityWebApp(Configuration.GetSection("AzureAdB2C"));

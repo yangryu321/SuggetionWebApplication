@@ -1,4 +1,5 @@
 ﻿@page "/Create"
+@attribute [Authorize]
 @using SuggestionAppLibrary.DataAccess
 @using SuggestionAppLibrary.Models
 @using SuggestionWebApplication.Models
@@ -7,6 +8,7 @@
 @inject ICategoryData categoryData
 @inject IUserData userData
 @inject NavigationManager navManager
+@inject AuthenticationStateProvider authProvider
 
 
 
@@ -95,8 +97,10 @@
         //get all categories
         categories = await categoryData.GetAllCategories();
 
-        //create a user
-        loggedInUser = await userData.GetUserFromAuthentication("123-abc");
+        var authState = await authProvider.GetAuthenticationStateAsync();
+        string objectId=authState.User.Claims.FirstOrDefault(x => x.Type.Contains("objectidentifier"))?.Value;
+        loggedInUser = await userData.GetUserFromAuthentication(objectId);
+
 
     }
 

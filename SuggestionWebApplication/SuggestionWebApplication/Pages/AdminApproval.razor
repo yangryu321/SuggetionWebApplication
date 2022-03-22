@@ -1,4 +1,5 @@
 ﻿@page "/AdminApproval"
+@attribute [Authorize(Policy = "Admin")]
 @using SuggestionAppLibrary.DataAccess
 @using SuggestionAppLibrary.Models
 
@@ -35,19 +36,19 @@
         <div>
             @if (OkToEditSuggest == s.Id)
             {
-            <EditForm Model="@OkToEditSuggest" OnSubmit="(()=>SaveSuggestion(s))">
-                <InputText @bind-Value="CurrentEditedSuggesion"/> 
-                <div>
-                    <button type="submit">
-                        <span class="oi oi-check"></span>
-                    </button>
-                </div>
-                <div>
-                    <button type="button" @onclick="(()=>OkToEditSuggest=string.Empty)">
-                        <span class="oi oi-x"></span>
-                    </button>
-                </div>
-            </EditForm>
+                <EditForm Model="@OkToEditSuggest" OnSubmit="(()=>SaveSuggestion(s))">
+                    <InputText @bind-Value="CurrentEditedSuggesion" />
+                    <div>
+                        <button type="submit">
+                            <span class="oi oi-check"></span>
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" @onclick="(()=>OkToEditSuggest=string.Empty)">
+                            <span class="oi oi-x"></span>
+                        </button>
+                    </div>
+                </EditForm>
 
             }
             else
@@ -107,7 +108,7 @@
     private List<SuggestionModel> submissions = new List<SuggestionModel>();
     private SuggestionModel editingModel = new SuggestionModel();
 
-    private string OkToEditDescription="";
+    private string OkToEditDescription = "";
     private string OkToEditSuggest = "";
 
     private string CurrentEditedSuggesion = "";
