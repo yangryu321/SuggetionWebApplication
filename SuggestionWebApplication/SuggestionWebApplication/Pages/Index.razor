@@ -5,20 +5,15 @@
 
 
 @inject IUserData userData
+@inject ICategoryData categoryData
+@inject ISuggestionData suggestionData
+@inject IStatusData statusData
 @inject AuthenticationStateProvider authProvider
+@inject ProtectedSessionStorage sessionStorage
+@inject NavigationManager navManager
 
 
 
-
-
-
-
-
-
-
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
 
 
 
@@ -30,12 +25,115 @@ Welcome to your new app.
 
 @code
 {
+
+    private List<SuggestionModel> suggestions = new List<SuggestionModel>();
+    private List<CategoryModel> categories = new List<CategoryModel>();
+    private List<StatusModel> statuses = new List<StatusModel>();
     private UserModel loggedInUser = new UserModel();
 
 
+    //for filtering 
+    private string selectedCategory = "All";
+    private string selectedStatus = "All";
+    private string searchText = "";
+    bool isSortedByNew = true;
+
     protected async override Task OnInitializedAsync()
     {
+
+        statuses = await statusData.GetAllStatuses();
+        categories = await categoryData.GetAllCategories();
         await LoadAndVerifyUser();
+
+    }
+
+
+    //it will run after the page is rendered
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        if (firstRender)
+        {
+            await LoadFilterState();
+            await FilterSuggestions();
+            StateHasChanged();
+
+        }
+
+    }
+
+
+
+    private async Task LoadFilterState()
+    {
+        //get the category from seesion storage
+        var stringResults = await sessionStorage.GetAsync<string>(nameof(selectedCategory));
+        selectedCategory = stringResults.Success ? stringResults.Value : "All";
+
+        //get the status from session storage
+        stringResults = await sessionStorage.GetAsync<string>(nameof(selectedStatus));
+        selectedStatus = stringResults.Success ? stringResults.Value : "All";
+
+        //get the text from session storage 
+        stringResults = await sessionStorage.GetAsync<string>(nameof(searchText));
+        searchText = stringResults.Success ? stringResults.Value : "";
+
+        //get the value of isSorted from session storage 
+        var boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByNew));
+        isSortedByNew = boolResults.Success ? boolResults.Value : true;
+    }
+
+
+    private async Task SaveFilterState()
+    {
+        await sessionStorage.SetAsync(nameof(selectedCategory), selectedCategory);
+        await sessionStorage.SetAsync(nameof(selectedStatus), selectedStatus);
+        await sessionStorage.SetAsync(nameof(isSortedByNew), isSortedByNew);
+        await sessionStorage.SetAsync(nameof(searchText), searchText);
+    }
+
+
+    private async Task FilterSuggestions()
+    {
+        var output = await suggestionData.GetAllAprrovedSuggestions();
+
+
+        //first filter by selectedCategory got from session storage
+        if (selectedCategory!="All")
+        {
+            output=output.Where(x => x.Category?.CategoryName == selectedCategory).ToList();
+
+        }
+
+        //filter by selectedStatus
+        if (selectedStatus!="All")
+        {
+            output = output.Where(x => x.SuggestionStatus?.StatusName == selectedStatus).ToList();
+
+        }
+
+        //filter by searchText on suggesions and description
+        if (string.IsNullOrWhiteSpace(searchText)==false)
+        {
+            output = output.Where(x => x.Suggestion.Contains(
+                searchText, StringComparison.InvariantCultureIgnoreCase)||
+                x.Description.Contains(searchText, StringComparison.InvariantCultureIgnoreCase)).ToList();
+
+        }
+
+        //filter by IsSortedByNew
+        if (isSortedByNew)
+        {
+            output = output.OrderByDescending(x => x.DateCreated).ToList();
+        }
+        else
+        {
+            output = output.OrderByDescending(x => x.UserVotes.Count).ThenByDescending(x => x.DateCreated).ToList();
+        }
+
+        suggestions = output;
+
+        await SaveFilterState();
 
     }
 
@@ -105,6 +203,84 @@ Welcome to your new app.
 
     }
 
+
+    //Creat methods to bind to buttons
+
+    //bind to OrderByNew button
+    private async Task OrderByNew()
+    {
+        //stuff to do 
+        //set a value to isSortedByNew
+        if (isSortedByNew)
+        {
+            isSortedByNew = false;
+        }
+        else
+        {
+            isSortedByNew = true;
+        }
+        //filter the suggestions by isSortedBynew
+        await FilterSuggestions();
+
+    }
+
+    //Bind to search button
+    private async Task OnsearchInPut(string input)
+    {
+        searchText = input;
+
+        await FilterSuggestions();
+
+    }
+
+    //bind to Category button
+    private async Task OnCategoryClick(string category="All")
+    {
+        selectedCategory = category;
+        await FilterSuggestions();
+
+    }
+
+    //bind to Status button
+    private async Task OnStatusClick(string status="All")
+    {
+        selectedStatus = status;
+        await FilterSuggestions();
+
+    }
+
+
+
+    //bind to upvote text above
+    private string GetupVoteTopText(SuggestionModel suggestion)
+    {
+        if (suggestion.UserVotes?.Count>0)
+        {
+            return suggestion.UserVotes.Count.ToString("00");
+        }
+        else
+        {
+            return "Click To";
+        }
+    }
+
+    //bind to upvote text below
+    private string GetupVoteBottomText(SuggestionModel suggestion)
+    {
+        if (suggestion.UserVotes?.Count > 1)
+        {
+            return "Upvotes";
+        }
+        else
+        {
+            return "Upvote";
+        }
+    }
+
+    private void OpenDetails(SuggestionModel suggestion)
+    {
+        navManager.NavigateTo($"/Details/{suggestion.Id}");
+    }
 
 
 
