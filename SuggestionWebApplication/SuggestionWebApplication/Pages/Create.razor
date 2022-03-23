@@ -4,6 +4,7 @@
 @using SuggestionAppLibrary.Models
 @using SuggestionWebApplication.Models
 @using SuggestionWebApplication.Components
+@using SuggestionWebApplication.Helpers
 @inject ISuggestionData suggestionData
 @inject ICategoryData categoryData
 @inject IUserData userData
@@ -97,10 +98,11 @@
         //get all categories
         categories = await categoryData.GetAllCategories();
 
-        var authState = await authProvider.GetAuthenticationStateAsync();
-        string objectId=authState.User.Claims.FirstOrDefault(x => x.Type.Contains("objectidentifier"))?.Value;
-        loggedInUser = await userData.GetUserFromAuthentication(objectId);
+        //var authState = await authProvider.GetAuthenticationStateAsync();
+        //string objectId=authState.User.Claims.FirstOrDefault(x => x.Type.Contains("objectidentifier"))?.Value;
+        //loggedInUser = await userData.GetUserFromAuthentication(objectId);
 
+        loggedInUser=await authProvider.GetUserFromAuth(userData);
 
     }
 

@@ -2,6 +2,7 @@
 @attribute [Authorize]
 @using SuggestionAppLibrary.DataAccess
 @using SuggestionAppLibrary.Models
+@using SuggestionWebApplication.Helpers
 
 @inject IUserData userData
 @inject ISuggestionData suggesitonData
@@ -235,9 +236,12 @@
     protected async override Task OnInitializedAsync()
     {
 
-        var authState = await authProvider.GetAuthenticationStateAsync();
-        string objectId = authState.User.Claims.FirstOrDefault(x => x.Type.Contains("objectidentifier"))?.Value;
-        loggedInUser = await userData.GetUserFromAuthentication(objectId);
+        //var authState = await authProvider.GetAuthenticationStateAsync();
+        //string objectId = authState.User.Claims.FirstOrDefault(x => x.Type.Contains("objectidentifier"))?.Value;
+        //loggedInUser = await userData.GetUserFromAuthentication(objectId);
+
+        var loggedInUser = await authProvider.GetUserFromAuth(userData);
+
 
 
         if (loggedInUser != null)
