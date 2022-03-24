@@ -285,9 +285,9 @@
     {
         //stuff to do 
         //set a value to isSortedByNew
-       
+
         isSortedByNew = sorting;
-        
+
         //filter the suggestions by isSortedBynew
         await FilterSuggestions();
 
@@ -329,7 +329,14 @@
         }
         else
         {
-            return "Click To";
+            if (suggestion.Author.Id==loggedInUser.Id)
+            {
+                return "Awaiting";
+            }
+            else
+            {
+                return "Click to";
+            }
         }
     }
 

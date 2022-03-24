@@ -1,9 +1,12 @@
 ﻿@page "/Details/{Id}"
 @using SuggestionAppLibrary.DataAccess
 @using SuggestionAppLibrary.Models
+@using SuggestionWebApplication.Helpers
 
 @inject ISuggestionData suggestionData
+@inject IUserData userData
 @inject NavigationManager navManager
+@inject AuthenticationStateProvider authProvider
 
 
 
@@ -14,43 +17,42 @@
 <div>
     @if (suggestion is not null)
     {
-    <div>
+        <div>
 
-        <div>
-            @suggestion.DateCreated.ToString("MM.dd.yyyy")
+            <div>
+                @suggestion.DateCreated.ToString("MM.dd.yyyy")
 
-        </div>
+            </div>
 
-        <div>
-            @suggestion.Suggestion
+            <div>
+                @suggestion.Suggestion
+            </div>
+            <div>
+                @suggestion.Category.CategoryName
+            </div>
+            <div>
+                @suggestion.Author.DisplayName
+            </div>
+            <div>
+                @suggestion.Description
+            </div>
+            <div>
+                @((MarkupString)suggestion.OwnerNotes)
+            </div>
+            <div>
+                @if (suggestion.SuggestionStatus is not null)
+                {
+                    @suggestion.SuggestionStatus.StatusName
+                }
+            </div>
+            <div>
+                <div>@GetupVoteTopText(suggestion)</div>
+                <span class="oi oi-caret-top"></span>
+                <div>@GetupVoteBottomText(suggestion)</div>
+            </div>
+            <button @onclick="ClosePage">
+            </button>
         </div>
-        <div>
-            @suggestion.Category.CategoryName
-        </div>
-        <div>
-            @suggestion.Author.DisplayName
-        </div>
-        <div>
-            @suggestion.Description
-        </div>
-        <div>
-            @((MarkupString)suggestion.OwnerNotes)
-        </div>
-        <div>
-            @if (suggestion.SuggestionStatus is not null)
-            {
-                @suggestion.SuggestionStatus.StatusName
-            }
-        </div>
-        <div>
-            <div>@GetupVoteTopText(suggestion)</div>
-            <span class="oi oi-caret-top"></span>
-            <div>@GetupVoteBottomText(suggestion)</div>
-        </div>
-        <button @onclick="ClosePage">
-            
-        </button>
-    </div>
 
     }
 </div>
@@ -60,6 +62,7 @@
 
 @code {
 
+    private UserModel loggedInUser;
 
     private SuggestionModel suggestion;
 
@@ -70,6 +73,7 @@
     protected async override Task OnInitializedAsync()
     {
         suggestion = await suggestionData.GetSuggestion(Id);
+        loggedInUser = await authProvider.GetUserFromAuth(userData);
     }
 
 
@@ -82,7 +86,19 @@
         }
         else
         {
-            return "Click To";
+            if (loggedInUser is not null)
+            {
+                if (suggestion.Author.Id == loggedInUser.Id)
+                {
+                    return "Awaiting";
+                }
+
+                return "Click to";
+            }
+            else
+            {
+                return "Click to";
+            }
         }
     }
 
