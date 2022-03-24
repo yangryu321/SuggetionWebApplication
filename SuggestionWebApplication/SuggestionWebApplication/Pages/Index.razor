@@ -12,13 +12,87 @@
 @inject ProtectedSessionStorage sessionStorage
 @inject NavigationManager navManager
 
+<h1>
+    Training Suggesiton
+</h1>
+
+<div>
+    <button>Suggest</button>
+</div>
+
+<div>
+    <div>@suggestions?.Count Suggestions</div>
+    <div>
+        <button @onclick="(()=>OrderByNew(true))">New</button>
+        <button @onclick="(()=>OrderByNew(false))"> Popular</button>
+    </div>
+    <div>
+        <input type="text" placeholder="Search" aria-label="Search box" @oninput="((txt)=>OnsearchInPut((string)txt.Value))"/> 
+    </div>
+</div>
+
+<div>
+    <div>
+        @if(suggestions is not null)
+            {
+                <Virtualize Items="@suggestions" Context="s" OverscanCount="10">
+                    <div>
+                        <div>
+                            <div>@GetupVoteTopText(s)</div>
+                            <span class="oi oi-caret-top" ></span>
+                            <div>@GetupVoteBottomText(s)</div>
+                        </div>
+                        <div>
+                            <div @onclick="(() => OpenDetails(s))">
+                                Suggestion: @s.Suggestion
+                            </div>
+                            <div @onclick="(() => OpenDetails(s))">
+                                Catogory: @s.Category?.CategoryName
+                            </div>
+                        </div>
+                        <div>
+                           Status: @s.SuggestionStatus?.StatusName
+                        </div>
+                    </div>
+                </Virtualize>
+            }
+    </div>
+
+    <div>
+        @if (categories is not null)
+        {
+            <span>
+                FILTERByCATEGORY
+            </span>
+            <div @onclick="(()=>OnCategoryClick())">All</div>
+            @foreach (var c in categories)
+            {
+                <div @onclick="(()=>OnCategoryClick(c.CategoryName))">@c.CategoryName</div>
+
+            }
+
+        }
+
+        @if (statuses is not null)
+        {
+            <span>
+                FILTERBySTATUS
+            </span>
+            <div @onclick="(()=>OnStatusClick())">All</div>
+            @foreach (var s in statuses)
+            {
+                <div @onclick="(()=>OnStatusClick(s.StatusName))">@s.StatusName</div>
+
+            }
+
+        }
+    </div>
 
 
 
 
 
-
-
+</div>
 
 
 
@@ -137,7 +211,7 @@
 
     }
 
-
+    //verify and creat user in database
     private async Task LoadAndVerifyUser()
     {
         var authState = await authProvider.GetAuthenticationStateAsync();
@@ -207,18 +281,13 @@
     //Creat methods to bind to buttons
 
     //bind to OrderByNew button
-    private async Task OrderByNew()
+    private async Task OrderByNew(bool sorting)
     {
         //stuff to do 
         //set a value to isSortedByNew
-        if (isSortedByNew)
-        {
-            isSortedByNew = false;
-        }
-        else
-        {
-            isSortedByNew = true;
-        }
+       
+        isSortedByNew = sorting;
+        
         //filter the suggestions by isSortedBynew
         await FilterSuggestions();
 
