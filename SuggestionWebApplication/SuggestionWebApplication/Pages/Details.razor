@@ -45,7 +45,7 @@
                     @suggestion.SuggestionStatus.StatusName
                 }
             </div>
-            <div>
+            <div @onclick="(()=>Upvote(suggestion))">
                 <div>@GetupVoteTopText(suggestion)</div>
                 <span class="oi oi-caret-top"></span>
                 <div>@GetupVoteBottomText(suggestion)</div>
@@ -86,14 +86,9 @@
         }
         else
         {
-            if (loggedInUser is not null)
+            if (suggestion.Author.Id == loggedInUser.Id)
             {
-                if (suggestion.Author.Id == loggedInUser.Id)
-                {
-                    return "Awaiting";
-                }
-
-                return "Click to";
+                return "Awaiting";
             }
             else
             {
@@ -113,7 +108,6 @@
         {
             return "Upvote";
         }
-
     }
 
 
@@ -121,4 +115,35 @@
     {
         navManager.NavigateTo("/");
     }
+
+    private async Task Upvote(SuggestionModel suggestion)
+    {
+        //suggestion.UserVotes.Add(loggedInUser.Id);
+        //await suggestionData.UpdateSuggestion(suggestion);
+
+        //loggedInUser.VotedOnSuggestions.Add(new BasicSuggestionModel(suggestion));
+        //await userData.UpdateUser(loggedInUser);
+
+        if (!string.IsNullOrEmpty(loggedInUser.Id))
+        {
+            if (suggestion.Author.Id == loggedInUser.Id)
+            {
+                return;
+                //suggestion.NumberOfVotes = (await suggestionData.GetSuggestion(suggestion.Id)).UserVotes.Count;
+            }
+
+            //Update suggesiton locally, has nothting to do with database
+            if (suggestion.UserVotes.Add(loggedInUser.Id) == false)
+            {
+                suggestion.UserVotes.Remove(loggedInUser.Id);
+            }
+
+            await suggestionData.UpVoteSuggestions(suggestion.Id, loggedInUser.Id);
+        }
+        else
+        {
+            navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+        }
+    }
+
 }

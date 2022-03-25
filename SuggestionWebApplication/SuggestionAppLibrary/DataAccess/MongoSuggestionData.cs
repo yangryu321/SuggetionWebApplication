@@ -95,7 +95,9 @@ namespace SuggestionAppLibrary.DataAccess
                     suggestion.UserVotes.Remove(userId);
                 }
 
-                await suggestionCollectionInTransaction.ReplaceOneAsync(x => x.Id == suggestionId, suggestion);
+                await suggestionCollectionInTransaction.ReplaceOneAsync(session,x => x.Id == suggestionId, suggestion);
+
+
 
                 var UserCollectionInTransaction = db.GetCollection<UserModel>(_db.UserCollectionName);
                 var user = (await UserCollectionInTransaction.FindAsync(x => x.Id == userId)).First();
@@ -111,7 +113,7 @@ namespace SuggestionAppLibrary.DataAccess
                     user.VotedOnSuggestions.Add(new BasicSuggestionModel(suggestion));
                 }
 
-                await UserCollectionInTransaction.ReplaceOneAsync(x => x.Id == userId, user);
+                await UserCollectionInTransaction.ReplaceOneAsync(session,x => x.Id == userId, user);
 
                 await session.CommitTransactionAsync();
 
@@ -143,12 +145,12 @@ namespace SuggestionAppLibrary.DataAccess
             {
                 var db = client.GetDatabase(_db.DbName);
                 var suggestionCollectionInTransaction = db.GetCollection<SuggestionModel>(_db.SuggetionCollectionName);
-                await suggestionCollectionInTransaction.InsertOneAsync(suggestion);
+                await suggestionCollectionInTransaction.InsertOneAsync(session, suggestion);
 
                 var userCollectionInTransaction = db.GetCollection<UserModel>(_db.UserCollectionName);
                 var user = (await userCollectionInTransaction.FindAsync(x => x.Id == suggestion.Author.Id)).First();
                 user.AnchoredSuggestions.Add(item: new BasicSuggestionModel(suggestion));
-                await userCollectionInTransaction.ReplaceOneAsync(x => x.Id == user.Id, user);
+                await userCollectionInTransaction.ReplaceOneAsync(session,x => x.Id == user.Id, user);
 
                 await session.CommitTransactionAsync();
             }

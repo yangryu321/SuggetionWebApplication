@@ -37,9 +37,9 @@
             {
                 <Virtualize Items="@suggestions" Context="s" OverscanCount="10">
                     <div>
-                        <div>
+                        <div @onclick="(()=>Upvote(s))">
                             <div>@GetupVoteTopText(s)</div>
-                            <span class="oi oi-caret-top" ></span>
+                            <span class="oi oi-caret-top"></span>
                             <div>@GetupVoteBottomText(s)</div>
                         </div>
                         <div>
@@ -358,6 +358,36 @@
         navManager.NavigateTo($"/Details/{suggestion.Id}");
     }
 
+
+    private async Task Upvote(SuggestionModel suggestion)
+    {
+        //suggestion.UserVotes.Add(loggedInUser.Id);
+        //await suggestionData.UpdateSuggestion(suggestion);
+
+        //loggedInUser.VotedOnSuggestions.Add(new BasicSuggestionModel(suggestion));
+        //await userData.UpdateUser(loggedInUser);
+
+        if(!string.IsNullOrEmpty(loggedInUser.Id))
+        {
+            if (suggestion.Author.Id== loggedInUser.Id)
+            {
+                return;
+                //suggestion.NumberOfVotes = (await suggestionData.GetSuggestion(suggestion.Id)).UserVotes.Count;
+            }
+
+            //Update suggesiton locally, has nothting to do with database
+            if (suggestion.UserVotes.Add(loggedInUser.Id) == false)
+            {
+                suggestion.UserVotes.Remove(loggedInUser.Id);
+            }
+
+            await suggestionData.UpVoteSuggestions(suggestion.Id, loggedInUser.Id);
+        }
+        else
+        {
+            navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+        }
+    }
 
 
 }
