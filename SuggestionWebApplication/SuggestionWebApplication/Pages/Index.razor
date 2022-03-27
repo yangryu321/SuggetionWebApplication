@@ -13,7 +13,7 @@
 @inject NavigationManager navManager
 
 <h1>
-    Training Suggesiton
+    SF6 Wishlist
 </h1>
 
 <div>
@@ -329,15 +329,23 @@
         }
         else
         {
-            if (suggestion.Author.Id==loggedInUser.Id)
+            if(!string.IsNullOrEmpty(loggedInUser.Id))
             {
-                return "Awaiting";
+                if (suggestion.Author.Id == loggedInUser.Id)
+                {
+                    return "Awaiting";
+                }
+                else
+                {
+                    return "Click to";
+                }
             }
             else
             {
                 return "Click to";
             }
         }
+
     }
 
     //bind to upvote text below

@@ -62,7 +62,7 @@
 
 @code {
 
-    private UserModel loggedInUser;
+    private UserModel loggedInUser=new UserModel();
 
     private SuggestionModel suggestion;
 
@@ -86,9 +86,16 @@
         }
         else
         {
-            if (suggestion.Author.Id == loggedInUser.Id)
+            if (loggedInUser is not null)
             {
-                return "Awaiting";
+                if (suggestion.Author.Id == loggedInUser.Id)
+                {
+                    return "Awaiting";
+                }
+                else
+                {
+                    return "Click to";
+                }
             }
             else
             {
@@ -124,7 +131,7 @@
         //loggedInUser.VotedOnSuggestions.Add(new BasicSuggestionModel(suggestion));
         //await userData.UpdateUser(loggedInUser);
 
-        if (!string.IsNullOrEmpty(loggedInUser.Id))
+        if (loggedInUser is not null)
         {
             if (suggestion.Author.Id == loggedInUser.Id)
             {
