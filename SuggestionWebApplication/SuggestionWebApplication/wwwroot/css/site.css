@@ -12,14 +12,14 @@ html, body {
 h1,h2,h3,h4,h5,h6{
     font-family:'Montserrat',sans-serif;
     font-weight: 900;
-    color:#FFFFFF;
+    color:#1861ac;
 }
 
 
 body {
-    /*background: url(../images/street-fighter-6-logo.jpeg) no-repeat  center center fixed;*/
-    background-size:cover;
-    height:100%
+    background: url(../images/street-fighter-6-logo.jpeg) no-repeat center center fixed;
+    background-size: cover;
+    height: 100%
 }
 
 
@@ -37,7 +37,7 @@ h1{
 
 
 a, .btn-link {
-    color: #0366d6;
+    color: #fff;
 }
 
 .btn-primary {
@@ -80,3 +80,109 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+.page-heading{
+
+    text-align:center;
+
+}
+
+.suggestion-container{
+    display:flex;
+    justify-content:center;
+    margin-bottom:3rem;
+}
+
+.suggestion-btn{
+    font-family:'Montserrat', sans-serif;
+    border-width:3px;
+    border-radius:10px;
+    padding-left:2rem;
+    padding-right:2rem;
+    font-weight:900;
+}
+
+.btn-outline-light:hover{
+    color:#1b6ec2
+    Background:#FFFFFF;
+    border-color:#FFFFFF;
+}
+
+.suggestion-count {
+    font-family: 'Montserrat', sans-serif;
+    font-weight:700;
+    font-size:1rem;
+}
+
+
+.btn-order{
+    background-color:#FFFFFF;
+    border:1px solid #DDDDDD;
+    border-radius:10px;
+}
+
+.btn:focus,
+.form-control:focus{
+    box-shadow:none;
+}
+
+.sort-selected {
+    background-color: #DDDDDD;
+    color: #000000;
+    font-weight: 700;
+}
+
+    .sort-selected:hover {
+        color: #000000;
+    }
+
+.search-box {
+    --bs-gutter-x: 3.5rem;
+}
+
+.rounded-control {
+    border-radius: 10px;
+}
+
+
+.categories{
+    margin:1rem;
+    background-color:#FFFFFF;
+    border-radius:10px;
+    padding:1rem;
+
+}
+
+.categories div{
+    margin-top:1rem;
+}
+
+.categories div:hover{
+    cursor:pointer;
+}
+
+.selected-category{
+    font-weight:700;
+
+}
+
+
+.statuses {
+    margin: 1rem;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+    .statuses div {
+        margin-top: 1rem;
+    }
+
+        .statuses div:hover {
+            cursor: pointer;
+        }
+
+.selected-status {
+    font-weight: 700;
+}
+

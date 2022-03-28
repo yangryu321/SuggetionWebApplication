@@ -12,87 +12,95 @@
 @inject ProtectedSessionStorage sessionStorage
 @inject NavigationManager navManager
 
-<h1>
+<h1 class="page-heading text-uppercase mb-4">
     SF6 Wishlist
 </h1>
 
-<div>
-    <button>Suggest</button>
+<div class="suggestion-container">
+    <button @onclick="LoadCreatePage" class="suggest-btn btn btn-outline-light btn-lg  text-uppercase">Suggest</button>
 </div>
 
-<div>
-    <div>@suggestions?.Count Suggestions</div>
-    <div>
-        <button @onclick="(()=>OrderByNew(true))">New</button>
-        <button @onclick="(()=>OrderByNew(false))"> Popular</button>
+<div class="row">
+    <div class="suggestion-count col-md-4 text-light mt-2">@suggestions?.Count Suggestions</div>
+    <div class="col-md-4 col-xl-5 btn-group">
+        <button class="btn btn-order @SortedByNewClass(true)" @onclick="(() => OrderByNew(true))">New</button>
+        <button class="btn btn-order @SortedByNewClass(false)" @onclick="(() => OrderByNew(false))"> Popular</button>
     </div>
-    <div>
-        <input type="text" placeholder="Search" aria-label="Search box" @oninput="((txt)=>OnsearchInPut((string)txt.Value))"/> 
+    <div class="col-md-4 col-xl-3 search-box">
+        <input type="text" placeholder="Search" aria-label="Search box" class="form-control rounded-control"
+               @oninput="((txt) => OnsearchInPut((string)txt.Value))" />
     </div>
 </div>
 
-<div>
-    <div>
-        @if(suggestions is not null)
-            {
-                <Virtualize Items="@suggestions" Context="s" OverscanCount="10">
-                    <div>
-                        <div @onclick="(()=>Upvote(s))">
-                            <div>@GetupVoteTopText(s)</div>
-                            <span class="oi oi-caret-top"></span>
-                            <div>@GetupVoteBottomText(s)</div>
+<div class="row">
+    <div class="col-md-8 col-xl-9">
+        @if (suggestions is not null)
+        {
+            <Virtualize Items="@suggestions" Context="s" OverscanCount="10">
+                <div class="suggestion-entry">
+                    <div class="@GetVoteClass(s)" @onclick="(() => Upvote(s))">
+                        <div class="text-uppercase">@GetupVoteTopText(s)</div>
+                        <span class="oi oi-caret-top" style="font-size: 3rem;"></span>
+                        <div class="text-uppercase">@GetupVoteBottomText(s)</div>
+                    </div>
+                    <div class="suggestion-entry-text">
+                        <div class="suggestion-entry-text-title" @onclick="(() => OpenDetails(s))">
+                            Suggestion: @s.Suggestion
                         </div>
-                        <div>
-                            <div @onclick="(() => OpenDetails(s))">
-                                Suggestion: @s.Suggestion
-                            </div>
-                            <div @onclick="(() => OpenDetails(s))">
-                                Catogory: @s.Category?.CategoryName
-                            </div>
-                        </div>
-                        <div>
-                           Status: @s.SuggestionStatus?.StatusName
+                        <div class="suggestion-entry-text-category" @onclick="(() => OpenDetails(s))">
+                            Catogory: @s.Category?.CategoryName
                         </div>
                     </div>
-                </Virtualize>
-            }
+                    <div class="suggestion-entry-status @GetSuggestionStatusClass(s)">
+                        <div class="suggestion-entry-status-text">
+                            Status: @s.SuggestionStatus?.StatusName
+                        </div>
+
+                    </div>
+                </div>
+            </Virtualize>
+        }
+
     </div>
 
-    <div>
+
+    <div class="col-md-4 col-xl-3">
         @if (categories is not null)
         {
-            <span>
-                FILTERByCATEGORY
-            </span>
-            <div @onclick="(()=>OnCategoryClick())">All</div>
-            @foreach (var c in categories)
-            {
-                <div @onclick="(()=>OnCategoryClick(c.CategoryName))">@c.CategoryName</div>
+            <div class="categories">
+                <span class="text-uppercase fw-bold">
+                    CATEGORY
+                </span>
+                <div class="@GetSelectedCategory()" @onclick="(() => OnCategoryClick())">All</div>
+                @foreach (var c in categories)
+                {
+                    <div class="@GetSelectedCategory(c.CategoryName)" @onclick="(() => OnCategoryClick(c.CategoryName))">@c.CategoryName</div>
 
-            }
+                }
+            </div>
+
 
         }
 
         @if (statuses is not null)
         {
-            <span>
-                FILTERBySTATUS
-            </span>
-            <div @onclick="(()=>OnStatusClick())">All</div>
-            @foreach (var s in statuses)
-            {
-                <div @onclick="(()=>OnStatusClick(s.StatusName))">@s.StatusName</div>
+            <div class="statuses">
+                <span class="text-uppercase fw-bold">
+                    STATUS
+                </span>
+                <div class="@GetSelectedStatus()" @onclick="(() => OnStatusClick())">All</div>
+                @foreach (var s in statuses)
+                {
+                    <div class="@GetSelectedStatus(s.StatusName)" @onclick="(() => OnStatusClick(s.StatusName))">@s.StatusName</div>
 
-            }
+                }
+            </div>
 
         }
     </div>
 
-
-
-
-
 </div>
+
 
 
 
@@ -106,7 +114,7 @@
     private UserModel loggedInUser = new UserModel();
 
 
-    //for filtering 
+    //for filtering
     private string selectedCategory = "All";
     private string selectedStatus = "All";
     private string searchText = "";
@@ -148,11 +156,11 @@
         stringResults = await sessionStorage.GetAsync<string>(nameof(selectedStatus));
         selectedStatus = stringResults.Success ? stringResults.Value : "All";
 
-        //get the text from session storage 
+        //get the text from session storage
         stringResults = await sessionStorage.GetAsync<string>(nameof(searchText));
         searchText = stringResults.Success ? stringResults.Value : "";
 
-        //get the value of isSorted from session storage 
+        //get the value of isSorted from session storage
         var boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByNew));
         isSortedByNew = boolResults.Success ? boolResults.Value : true;
     }
@@ -173,24 +181,24 @@
 
 
         //first filter by selectedCategory got from session storage
-        if (selectedCategory!="All")
+        if (selectedCategory != "All")
         {
-            output=output.Where(x => x.Category?.CategoryName == selectedCategory).ToList();
+            output = output.Where(x => x.Category?.CategoryName == selectedCategory).ToList();
 
         }
 
         //filter by selectedStatus
-        if (selectedStatus!="All")
+        if (selectedStatus != "All")
         {
             output = output.Where(x => x.SuggestionStatus?.StatusName == selectedStatus).ToList();
 
         }
 
         //filter by searchText on suggesions and description
-        if (string.IsNullOrWhiteSpace(searchText)==false)
+        if (string.IsNullOrWhiteSpace(searchText) == false)
         {
             output = output.Where(x => x.Suggestion.Contains(
-                searchText, StringComparison.InvariantCultureIgnoreCase)||
+                searchText, StringComparison.InvariantCultureIgnoreCase) ||
                 x.Description.Contains(searchText, StringComparison.InvariantCultureIgnoreCase)).ToList();
 
         }
@@ -217,14 +225,14 @@
         var authState = await authProvider.GetAuthenticationStateAsync();
         string objectId = authState.User.Claims.FirstOrDefault(x => x.Type.Contains("objectidentifier"))?.Value;
 
-        if(string.IsNullOrEmpty(objectId)==false)
+        if (string.IsNullOrEmpty(objectId) == false)
         {
             loggedInUser = await userData.GetUserFromAuthentication(objectId) ?? new();
 
-            string firstName= authState.User.Claims.FirstOrDefault(x => x.Type.Contains("givenname"))?.Value;
-            string lastName= authState.User.Claims.FirstOrDefault(x => x.Type.Contains("surname"))?.Value;
-            string displayName= authState.User.Claims.FirstOrDefault(x => x.Type.Equals("name"))?.Value;
-            string email= authState.User.Claims.FirstOrDefault(x => x.Type.Contains("email"))?.Value;
+            string firstName = authState.User.Claims.FirstOrDefault(x => x.Type.Contains("givenname"))?.Value;
+            string lastName = authState.User.Claims.FirstOrDefault(x => x.Type.Contains("surname"))?.Value;
+            string displayName = authState.User.Claims.FirstOrDefault(x => x.Type.Equals("name"))?.Value;
+            string email = authState.User.Claims.FirstOrDefault(x => x.Type.Contains("email"))?.Value;
 
             bool isDirty = false;
 
@@ -283,7 +291,7 @@
     //bind to OrderByNew button
     private async Task OrderByNew(bool sorting)
     {
-        //stuff to do 
+        //stuff to do
         //set a value to isSortedByNew
 
         isSortedByNew = sorting;
@@ -303,7 +311,7 @@
     }
 
     //bind to Category button
-    private async Task OnCategoryClick(string category="All")
+    private async Task OnCategoryClick(string category = "All")
     {
         selectedCategory = category;
         await FilterSuggestions();
@@ -311,7 +319,7 @@
     }
 
     //bind to Status button
-    private async Task OnStatusClick(string status="All")
+    private async Task OnStatusClick(string status = "All")
     {
         selectedStatus = status;
         await FilterSuggestions();
@@ -323,13 +331,13 @@
     //bind to upvote text above
     private string GetupVoteTopText(SuggestionModel suggestion)
     {
-        if (suggestion.UserVotes?.Count>0)
+        if (suggestion.UserVotes?.Count > 0)
         {
             return suggestion.UserVotes.Count.ToString("00");
         }
         else
         {
-            if(!string.IsNullOrEmpty(loggedInUser.Id))
+            if (!string.IsNullOrEmpty(loggedInUser.Id))
             {
                 if (suggestion.Author.Id == loggedInUser.Id)
                 {
@@ -375,9 +383,9 @@
         //loggedInUser.VotedOnSuggestions.Add(new BasicSuggestionModel(suggestion));
         //await userData.UpdateUser(loggedInUser);
 
-        if(!string.IsNullOrEmpty(loggedInUser.Id))
+        if (!string.IsNullOrEmpty(loggedInUser.Id))
         {
-            if (suggestion.Author.Id== loggedInUser.Id)
+            if (suggestion.Author.Id == loggedInUser.Id)
             {
                 return;
                 //suggestion.NumberOfVotes = (await suggestionData.GetSuggestion(suggestion.Id)).UserVotes.Count;
@@ -396,6 +404,101 @@
             navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
         }
     }
+
+
+    private void LoadCreatePage()
+    {
+        if (loggedInUser.Id is not null)
+        {
+            navManager.NavigateTo("/Create");
+        }
+        else
+        {
+            navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+        }
+    }
+
+
+    private string SortedByNewClass(bool isNew)
+    {
+        if (isNew == isSortedByNew)
+        {
+            return "sort-selected";
+
+        }
+        else
+        {
+            return "";
+
+        }
+
+    }
+
+    private string GetVoteClass(SuggestionModel suggestion)
+    {
+        if (suggestion.UserVotes is null || suggestion.UserVotes.Count == 0)
+        {
+            return "suggestion-entry-no-votes";
+
+        }
+
+        if (suggestion.UserVotes.Contains(loggedInUser.Id))
+        {
+            return "suggestion-entry-voted";
+        }
+        else
+        {
+            return "suggestion-entry-not-voted";
+        }
+
+
+    }
+
+    private string GetSuggestionStatusClass(SuggestionModel suggestion)
+    {
+        if (suggestion is null || suggestion.SuggestionStatus is null)
+            return "suggestion-entry-status-none";
+
+
+        string output = suggestion.SuggestionStatus.StatusName switch
+        {
+            "Completed" => "suggestion-completed",
+            "Watching" => "suggestion-entry-status-watching",
+            "Upcoming" => "suggestion-entry-status-upcoming",
+            "Dismissed" => "suggestion-entry-status-dismissed",
+            _ => "suggestion-entry-status-none",
+
+        };
+
+        return output;
+
+
+    }
+
+    private string GetSelectedCategory(string category = "All")
+    {
+        if (selectedCategory == category)
+        {
+            return "selected-category";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    private string GetSelectedStatus(string status = "All")
+    {
+        if (selectedCategory == status)
+        {
+            return "selected-status";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
 
 
 }
