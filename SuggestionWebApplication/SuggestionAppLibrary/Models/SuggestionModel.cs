@@ -25,7 +25,7 @@ namespace SuggestionAppLibrary.Models
         public CategoryModel Category { get; set; }
         public StatusModel SuggestionStatus { get; set; }
         public HashSet<string> UserVotes { get; set; } = new();
-        public int NumberOfVotes { get; set; }
+       
 
     }
 

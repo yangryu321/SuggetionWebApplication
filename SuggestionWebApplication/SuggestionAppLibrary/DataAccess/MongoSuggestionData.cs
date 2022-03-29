@@ -85,7 +85,7 @@ namespace SuggestionAppLibrary.DataAccess
             {
                 var db = client.GetDatabase(_db.DbName);
                 var suggestionCollectionInTransaction = db.GetCollection<SuggestionModel>(_db.SuggetionCollectionName);
-                var suggestion = (await suggestionCollectionInTransaction.FindAsync(x => x.Id == suggestionId)).First();
+                var suggestion = (await suggestionCollectionInTransaction.FindAsync(x => x.Id == suggestionId)).FirstOrDefault();
 
                 bool isUpvote = suggestion.UserVotes.Add(userId);
 
@@ -100,7 +100,7 @@ namespace SuggestionAppLibrary.DataAccess
 
 
                 var UserCollectionInTransaction = db.GetCollection<UserModel>(_db.UserCollectionName);
-                var user = (await UserCollectionInTransaction.FindAsync(x => x.Id == userId)).First();
+                var user = (await UserCollectionInTransaction.FindAsync(x => x.Id == userId)).FirstOrDefault();
 
 
                 if (!isUpvote)

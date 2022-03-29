@@ -53,7 +53,15 @@
                     </div>
                     <div class="suggestion-entry-status @GetSuggestionStatusClass(s)">
                         <div class="suggestion-entry-status-text">
-                            Status: @s.SuggestionStatus?.StatusName
+                            @if (s.SuggestionStatus is not null)
+                            {
+                                @s.SuggestionStatus.StatusName;
+                            }
+                            else
+                            {
+                                @none;
+                            }
+
                         </div>
 
                     </div>
@@ -112,7 +120,7 @@
     private List<CategoryModel> categories = new List<CategoryModel>();
     private List<StatusModel> statuses = new List<StatusModel>();
     private UserModel loggedInUser = new UserModel();
-
+    private string none = "none";
 
     //for filtering
     private string selectedCategory = "All";
@@ -462,7 +470,7 @@
 
         string output = suggestion.SuggestionStatus.StatusName switch
         {
-            "Completed" => "suggestion-completed",
+            "Completed" => "suggestion-entry-completed",
             "Watching" => "suggestion-entry-status-watching",
             "Upcoming" => "suggestion-entry-status-upcoming",
             "Dismissed" => "suggestion-entry-status-dismissed",
@@ -489,7 +497,7 @@
 
     private string GetSelectedStatus(string status = "All")
     {
-        if (selectedCategory == status)
+        if (selectedStatus== status)
         {
             return "selected-status";
         }
