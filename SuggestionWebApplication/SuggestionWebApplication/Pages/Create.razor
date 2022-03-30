@@ -14,64 +14,65 @@
 
 
 
-
-<div>
-    <div>
-        <div>
-            <button type="button" @onclick="ClosePage"></button>
+<div class="row justify-content-center create-form mt-lg-5" >
+    <div class="col-xl-8 col-lg-10 form-layout">
+        <div class="close-button-section">
+            <button type="button" class="close" aria-label="Close" @onclick="ClosePage">
+                <span aria-hidden="true">&times;</span>
+            </button>
         </div>
-        @if (categories is not null)
-        {
-            <EditForm Model="suggestion" OnInvalidSubmit="CreateSuggestion">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <div>
-                    <label for="suggestion-text">
-                        Suggesion
-                    </label>
-                    <div>
-                        make a suggestion!
+        <div>
+            @if (categories is not null)
+            {
+                <EditForm Model="suggestion" OnInvalidSubmit="CreateSuggestion">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+                    <div class="input-section">
+                        <label class="form-label fw-bold text-uppercase" for="suggestion-text">
+                            Suggesion
+                        </label>
+                        <div class="input-description">
+                            Tell us what you want in street fighter VI
+                        </div>
+                        <InputText class="form-control" style="border:groove" id="suggestion-text" @bind-Value="suggestion.Suggestion" />
                     </div>
-                    <InputText id="suggestion-text" @bind-Value="suggestion.Suggestion" />
-                </div>
-                <div>
-                    <label for="category">Category</label>
-                    <div>Choose one category</div>
-                    <div>
-                        <MyInputRadioGroup id="category" @bind-Value="suggestion.CategoryId">
-                            @foreach (var option in categories)
-                                {
-                                <div>
-                                    <InputRadio Value="@option.Id" id="@option.Id" />
-                                    <label for="@option.Id">@option.CategoryName-@option.CategoryDescription</label>
+                    <div class="input-section">
+                        <label class="form-label fw-bold text-uppercase" for="category">Category</label>
+                        <div class="input-description">Choose one category</div>
+                        <div class="col-lg-8">
+                            <MyInputRadioGroup id="category" @bind-Value="suggestion.CategoryId">
+                                @foreach (var option in categories)
+                                    {
+                                    <div class="radio-item-group">
+                                        <InputRadio Value="@option.Id" id="@option.Id" />
+                                        <label for="@option.Id">@option.CategoryName-@option.CategoryDescription</label>
 
-                                </div>
+                                    </div>
 
-                                }
+                                    }
 
-                        </MyInputRadioGroup>
+                            </MyInputRadioGroup>
+                        </div>
+
                     </div>
 
-                </div>
-
-                <div>
-                    <label for="description">
-                        Description
-                    </label>
-                    <div>
-                        Describe your suggestion
+                    <div class="input-section">
+                        <label class="form-label fw-bold text-uppercase" for="description">Description</label>
+                        <div class="input-description">
+                            Describe your suggestion
+                        </div>
+                        <InputTextArea id="description" @bind-Value="suggestion.Description" />
                     </div>
-                    <InputTextArea id="description" @bind-Value="suggestion.Description" />
-                </div>
-                <div>
-                    <button type="submit" @onclick="CreateSuggestion">
-                        Suggest
-                    </button>
-                </div>
-            </EditForm>
-        }
+                    <div class="center-children">
+                        <button class="btn btn-main btn-lg text-uppercase" type="submit" @onclick="CreateSuggestion">
+                            Suggest
+                        </button>
+                    </div>
+                </EditForm>
 
-
+            }
+        </div>
+        
 
     </div>
 </div>

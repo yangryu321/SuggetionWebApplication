@@ -1,21 +1,19 @@
 ﻿@inherits LayoutComponentBase
+<pagetitle>
+    SuggestionAppUI
+</pagetitle>
 
-<div class="page">
-    @*<div class="sidebar">
-        <NavMenu />
-    </div>*@
-   
-    <div class="main">
-        @*<div class="top-row px" >*@
-        <div>
+<div class="page"> 
+    <div class="main container-xxl">
+        <div class="px-5 page-heading text-uppercase ">
+            <a href="/">
+                SF6 Wishlist
+            </a>
+        </div>
+        <div class="px-5 pt-3 nav-links">
             <LoginDisplay />
         </div>
-        @*<div class="top-row px-4">*@
-        <div class="topright">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <div class="content px-4">
+        <div class="content pt-1">
             @Body
         </div>
     </div>
