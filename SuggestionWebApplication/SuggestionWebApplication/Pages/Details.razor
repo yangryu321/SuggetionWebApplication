@@ -10,59 +10,88 @@
 
 
 
-<h1>
-    Suggestion Details
-</h1>
 
-<div>
-    @if (suggestion is not null)
-    {
-        <div>
-
-            <div>
-                @suggestion.DateCreated.ToString("MM.dd.yyyy")
-
-            </div>
-
-            <div>
-                @suggestion.Suggestion
-            </div>
-            <div>
-                @suggestion.Category.CategoryName
-            </div>
-            <div>
-                @suggestion.Author.DisplayName
-            </div>
-            <div>
-                @suggestion.Description
-            </div>
-            <div>
-                @((MarkupString)suggestion.OwnerNotes)
-            </div>
-            <div>
-                @if (suggestion.SuggestionStatus is not null)
-                {
-                    @suggestion.SuggestionStatus.StatusName
-                }
-            </div>
-            <div @onclick="(()=>Upvote(suggestion))">
-                <div>@GetupVoteTopText(suggestion)</div>
-                <span class="oi oi-caret-top"></span>
-                <div>@GetupVoteBottomText(suggestion)</div>
-            </div>
-            <button @onclick="ClosePage">
+<div class="mt-lg-5 row justify-content-center detail-form">
+    <div class="col-xl-8 col-lg-10 form-layout">
+        <div class="close-button-section">
+            <button type="button" class="close" aria-label="Close" @onclick="ClosePage">
+                <span aria-hidden="true">&times;</span>
             </button>
         </div>
+        <div>
+            @if (suggestion is not null)
+            {
+                <div class="row suggestion-detail-row ">
+                    <label>
+                        Suggestion Details
+                    </label>
+                    <div class="col-11 suggestion-detail">
+                        <div class="@GetVoteClass()" @onclick="(()=>Upvote(suggestion))">
+                            <div class="text-uppercase">@GetupVoteTopText(suggestion)</div>
+                            <span class="oi oi-caret-top entry-upvote"></span>
+                            <div class="text-uppercase">@GetupVoteBottomText(suggestion)</div>
+                        </div>
+                       
+                    </div>
 
-    }
+                    <div class="suggesiton-detail-text">
+                        <div class="suggestion-detail-date">
+                            @suggestion.DateCreated.ToString("MM.dd.yyyy")
+
+                        </div>
+                        <div class="font-weight-bold mb-2 suggestion-detail-suggestion">
+                            @suggestion.Suggestion
+                        </div>
+                        <div class="suggestion-btn-entry-text-category">
+                            @suggestion.Category.CategoryName
+                        </div>
+                        <div class="mb-2 suggestion-detail-author">
+                            @suggestion.Author.DisplayName
+                        </div>
+                        <div class="mb-2">
+                            @suggestion.Description
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            }
+
+
+
+        </div>
+
+    </div>
+
 </div>
+
+@if (suggestion?.SuggestionStatus is not null)
+{
+
+    <div class="row justify-content-center detail-form">
+        <div class="col-xl-8 col-lg-10 suggestion-results form-layout">
+            <div class="@GetSuggestionStatusClass()"></div>
+            <div class="suggestion-detail-status-section">
+                <div class="suggestion-detail-status fw-fold mb-2 suggestion-detail-suggestion">
+                    @suggestion.SuggestionStatus.StatusName
+                </div>
+                <div class="suggesiton-detail-owner-notes">
+                    @((MarkupString)suggestion.OwnerNotes)
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
 
 
 
 
 @code {
 
-    private UserModel loggedInUser=new UserModel();
+    private UserModel loggedInUser = new UserModel();
 
     private SuggestionModel suggestion;
 
@@ -151,6 +180,48 @@
         {
             navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
         }
+    }
+
+
+    private string GetVoteClass()
+    {
+        if (suggestion.UserVotes is null || suggestion.UserVotes.Count == 0)
+        {
+            return "suggestion-detail-no-votes";
+
+        }
+
+        if (suggestion.UserVotes.Contains(loggedInUser.Id))
+        {
+            return "suggestion-detail-voted";
+        }
+        else
+        {
+            return "suggestion-detail-not-voted";
+        }
+
+
+    }
+
+    private string GetSuggestionStatusClass()
+    {
+        if (suggestion is null || suggestion.SuggestionStatus is null)
+            return "suggestion-detail-status-none";
+
+
+        string output = suggestion.SuggestionStatus.StatusName switch
+        {
+            "Completed" => "suggestion-detail-status-completed",
+            "Watching" => "suggestion-detail-status-watching",
+            "Upcoming" => "suggestion-detail-status-upcoming",
+            "Dismissed" => "suggestion-detail-status-dismissed",
+            _ => "suggestion-detail-status-none",
+
+        };
+
+        return output;
+
+
     }
 
 }
