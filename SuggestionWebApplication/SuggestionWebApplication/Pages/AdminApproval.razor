@@ -8,17 +8,19 @@
 
 
 
-<h1>
+<h1 class="mb-4 mt-lg-5 justify-content-center">
     Pending suggestions
 </h1>
 
-<div>
-    <div>
+<div class="row">
+    <div class="suggestion-count col-8 mt-2 ">
         @submissions.Count submissions
     </div>
-    <div>
-        <button type="button" @onclick="ClosePage"></button>
-    </div>
+    @*<div class="col-4 close-buttton-section">
+        <button type="button" class="close" aria-label="Close" @onclick="ClosePage">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>*@
 </div>
 
 
@@ -27,66 +29,70 @@
 
     @foreach (var s in submissions)
     {
-        <div>
-            <div>
-                <button @onclick="(()=>ApproveSuggestion(s))">Approve</button>
-                <button @onclick="(()=>RejectSuggestion(s))">Reject</button>
+        <div class="row submission">
+            <div class="col-lg-2 col-md-3 col-sm-4">
+                <button class="btn btn-approve" @onclick="(()=>ApproveSuggestion(s))">Approve</button>
+                <button class="btn btn-reject" @onclick="(()=>RejectSuggestion(s))">Reject</button>
             </div>
-        </div>
-        <div>
-            @if (OkToEditSuggest == s.Id)
-            {
-                <EditForm Model="@OkToEditSuggest" OnSubmit="(()=>SaveSuggestion(s))">
-                    <InputText @bind-Value="CurrentEditedSuggesion" />
-                    <div>
-                        <button type="submit">
-                            <span class="oi oi-check"></span>
-                        </button>
-                    </div>
-                    <div>
-                        <button type="button" @onclick="(()=>OkToEditSuggest=string.Empty)">
-                            <span class="oi oi-x"></span>
-                        </button>
-                    </div>
-                </EditForm>
 
-            }
-            else
-            {
-                @s.Suggestion
-                <span class="oi oi-pencil" @onclick="(()=>EditSuggestion(s))"></span>
-            }
+            <div class="col-lg-10 col-md-9 col-sm-8">
+                <div>
+                    @if (OkToEditSuggest == s.Id)
+                    {
+                        <EditForm class="approval-edit-form" Model="@OkToEditSuggest" OnSubmit="(()=>SaveSuggestion(s))">
+                            <InputText class="form-control approval-edit-field" @bind-Value="CurrentEditedSuggesion" />
+                            <div>
+                                <button class="btn" type="submit">
+                                    <span class="oi oi-check submission-eidt-aprove"></span>
+                                </button>
+                            </div>
+                            <div>
+                                <button class="btn" type="button" @onclick="(()=>OkToEditSuggest=string.Empty)">
+                                    <span class="oi oi-x submission-edit-reject"></span>
+                                </button>
+                            </div>
+                        </EditForm>
 
-        </div>
-        <div>
-            @s.Category.CategoryName
-        </div>
-        <div>
-            @s.Author.DisplayName
-        </div>
-        <div>
-            @if (OkToEditDescription == s.Id)
-            {
-                <EditForm Model="@OkToEditDescription" OnSubmit="(()=>SaveDescription(s))">
-                    <InputTextArea @bind-Value="CurrentEditedDescription" />
-                    <div>
-                        <button type="submit">
-                            <span class="oi oi-check"></span>
-                        </button>
-                    </div>
-                    <div>
-                        <button type="button" @onclick="(()=>OkToEditDescription=string.Empty)">
-                            <span class="oi oi-x"></span>
-                        </button>
-                    </div>
-                </EditForm>
+                    }
+                    else
+                    {
+                        @s.Suggestion
+                        <span class="oi oi-pencil submission-edit-icon" @onclick="(()=>EditSuggestion(s))"></span>
+                    }
 
-            }
-            else
-            {
-                @s.Description
-                <span class="oi oi-pencil" @onclick="(()=>EditDescription(s))"></span>
-            }
+                </div>
+
+                <div>
+                    @s.Category.CategoryName
+                </div>
+                <div>
+                    @s.Author.DisplayName
+                </div>
+                <div>
+                    @if (OkToEditDescription == s.Id)
+                    {
+                        <EditForm class="approval-edit-form" Model="@OkToEditDescription" OnSubmit="(()=>SaveDescription(s))">
+                            <InputTextArea class="form-control approval-edit-field" @bind-Value="CurrentEditedDescription" />
+                            <div>
+                                <button class="btn" type="submit">
+                                    <span class="oi oi-check submission-eidt-aprove"></span>
+                                </button>
+                            </div>
+                            <div>
+                                <button class="btn" type="button" @onclick="(()=>OkToEditDescription=string.Empty)">
+                                    <span class="oi oi-x submission-edit-reject"></span>
+                                </button>
+                            </div>
+                        </EditForm>
+
+                    }
+                    else
+                    {
+                        @s.Description
+                        <span class="oi oi-pencil submission-edit-icon" @onclick="(()=>EditDescription(s))"></span>
+                    }
+                </div>
+            </div>
         </div>
     }
 
