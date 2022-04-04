@@ -256,7 +256,7 @@
             submissions = result.OrderByDescending(x => x.DateCreated).ToList();
             approved = submissions.Where(x => x.ApprovedForRelease == true && x.Archived == false && x.Rejected == false).ToList();
             archived = submissions.Where(x => x.ApprovedForRelease == false && x.Archived == true && x.Rejected == false).ToList();
-            pending = submissions.Where(x => x.Rejected == false && x.ApprovedForRelease == false).ToList();
+            pending = submissions.Where(x => x.Rejected == false && x.ApprovedForRelease == false && x.Archived ==false).ToList();
             rejected = submissions.Where(x => x.Rejected == true).ToList();
 
         }

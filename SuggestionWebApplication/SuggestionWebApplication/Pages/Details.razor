@@ -5,40 +5,37 @@
 
 @inject ISuggestionData suggestionData
 @inject IUserData userData
+@inject IStatusData statusData
 @inject NavigationManager navManager
 @inject AuthenticationStateProvider authProvider
 
 
-
+<div class="row align-items-center justify-content-center">
+    <h1>
+        Suggestion Details
+    </h1>
+</div>
 
 <div class="mt-lg-5 row justify-content-center detail-form">
     <div class="col-xl-8 col-lg-10 form-layout">
-        <div class="close-button-section">
-            <button type="button" class="close" aria-label="Close" @onclick="ClosePage">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div>
-            @if (suggestion is not null)
-            {
-                <div class="row suggestion-detail-row ">
-                    <label>
-                        Suggestion Details
-                    </label>
-                    <div class="col-11 suggestion-detail">
+
+        @if (suggestion is not null)
+        {
+            <div class="row suggestion-detail-row ">
+                <div class="col-11 suggestion-detail">
+                    <div>
                         <div class="@GetVoteClass()" @onclick="(()=>Upvote(suggestion))">
                             <div class="text-uppercase">@GetupVoteTopText(suggestion)</div>
                             <span class="oi oi-caret-top entry-upvote"></span>
                             <div class="text-uppercase">@GetupVoteBottomText(suggestion)</div>
                         </div>
-                       
-                    </div>
-
-                    <div class="suggesiton-detail-text">
                         <div class="suggestion-detail-date">
                             @suggestion.DateCreated.ToString("MM.dd.yyyy")
-
                         </div>
+                    </div>
+
+                    <div class="suggestion-detail-text">
+
                         <div class="font-weight-bold mb-2 suggestion-detail-suggestion">
                             @suggestion.Suggestion
                         </div>
@@ -51,17 +48,18 @@
                         <div class="mb-2">
                             @suggestion.Description
                         </div>
-
                     </div>
 
                 </div>
+                <div class="col-1 close-button-section">
+                    <button type="button" class="close" aria-label="Close" @onclick="ClosePage">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
 
+        }
 
-            }
-
-
-
-        </div>
 
     </div>
 
@@ -86,6 +84,53 @@
 
 }
 
+<AuthorizeView Policy="Admin">
+
+    <div class="row justify-content-center detail-form">
+        <div class="col-xl-8 col-lg-10 form-layout admin-details">
+            @if (string.IsNullOrEmpty(statusString))
+            {
+                <div class="suggesiton-detail-status font-weight-bold mb-2 suggestion-detail-suggestion">
+                    Set Status
+                </div>
+
+                <div class="admin-set-statuses">
+                    <button class="btn suggestion-entry-text-category btn-status-completed" @onclick="@(()=> statusString= "Completed")">
+                        Completed
+                    </button>
+
+                    <button class="btn suggestion-entry-text-category btn-status-watching" @onclick="@(()=> statusString= "Watching")">
+                        Watching
+                    </button>
+
+                    <button class="btn suggestion-entry-text-category btn-status-upcoming" @onclick="@(()=> statusString= "Upcoming")">
+                        Upcoming
+                    </button>
+
+                    <button class="btn suggestion-entry-text-category btn-status-dismissed" @onclick="@(()=> statusString= "Dismissed")">
+                        Dismissed
+                    </button>
+                </div>
+            }
+
+            else
+            {
+                <div class="suggestion-entry-bottom">
+                    <button class="btn btn-archive btn-archive-confirm" @onclick="SetStatus">
+                        Confirm
+                    </button>
+                    <button class="btn btn-archive btn-archive-reject" @onclick="@(() => statusString = "")">
+                        Cancel
+                    </button>
+                </div>
+
+            }
+
+        </div>
+    </div>
+
+</AuthorizeView>
+
 
 
 
@@ -98,11 +143,16 @@
     [Parameter]
     public string Id { get; set; }
 
+    private List<StatusModel> statuses;
+
+    private string statusString = "";
+
 
     protected async override Task OnInitializedAsync()
     {
         suggestion = await suggestionData.GetSuggestion(Id);
         loggedInUser = await authProvider.GetUserFromAuth(userData);
+        statuses = await statusData.GetAllStatuses();
     }
 
 
@@ -222,6 +272,31 @@
         return output;
 
 
+    }
+
+    private async Task SetStatus()
+    {
+        switch (statusString)
+        {
+
+            case "Completed":
+                suggestion.SuggestionStatus = statuses.Where(x => x.StatusName == "Completed").FirstOrDefault();
+                break;
+            case "Watching":
+                suggestion.SuggestionStatus = statuses.Where(x => x.StatusName == "Watching").FirstOrDefault();
+                break;
+            case "Upcoming":
+                suggestion.SuggestionStatus = statuses.Where(x => x.StatusName == "Upcoming").FirstOrDefault();
+                break;
+            case "Dismissed":
+                suggestion.SuggestionStatus = statuses.Where(x => x.StatusName == "Dismissed").FirstOrDefault();
+                break;
+            default:
+                return;
+        }
+
+        await suggestionData.UpdateSuggestion(suggestion);
+        statusString = "";
     }
 
 }

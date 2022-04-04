@@ -1,0 +1,60 @@
+﻿@page "/NotAuthorized"
+
+@using SuggestionAppLibrary.Models
+@using SuggestionWebApplication.Helpers
+@using SuggestionAppLibrary.DataAccess
+
+@inject NavigationManager navManager
+@inject AuthenticationStateProvider authProvider
+@inject IUserData userData
+
+<div class="mt-lg-5 row justify-content-center">
+    <div class="col-xl-8 col-lg-10 form-layout">
+        <div class="row">
+            <div class="col-11">
+                @if (loggedUser is not null)
+                {
+                    <h3 class="text-warning">You are not authorized</h3>
+                }
+                else
+                {
+                    <h3 class="text-warning">You are not authorized, please log in</h3>
+                }
+            </div>
+            <div>
+                <button type="button" class="close" aria-label="Close" @onclick="ClosePage">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+@code {
+
+    private UserModel loggedUser = new UserModel();
+
+
+    protected async override Task OnInitializedAsync()
+    {
+        loggedUser = await authProvider.GetUserFromAuth(userData);
+
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+
+    }
+
+
+}

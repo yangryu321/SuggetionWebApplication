@@ -103,8 +103,9 @@ a:hover, .btn-link:hover{
     text-align: left;
     font-size: 55px;
     font-family: 'Montserrat',sans-serif;
-    position: absolute;
-    top: 1rem;
+    position: relative;
+    top: 1.5rem;
+
 }
 
 .suggestion-container{
@@ -303,12 +304,12 @@ a:hover, .btn-link:hover{
 }
 
 .suggestion-entry-status-upcoming {
-    background-color: #B5D43A;
+    background-color: #835581;
     border: 1px #B5D43A solid;
 }
 
 .suggestion-entry-status-dismissed {
-    background-color: #afc360;
+    background-color: #F9C30B;
     border: 1px #B5D43A solid;
 }
 .suggestion-entry-status-none {
@@ -668,3 +669,59 @@ input-section{
     .edit-profile-color:hover{
         color: #1b6ec2
     }
+
+    .suggestion-entry-bottom{
+        display: flex;
+    }
+
+    .btn-archive{
+        border: 0;
+        background-color: #FFFFFF;
+        padding: 0 10px;
+        flex: unset;
+
+    }
+
+    .btn-archive-confirm,
+    .btn-archive-reject{
+        text-transform: uppercase;
+        color: darkgray;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        font-size: 0.8rem;
+        flex: 1;
+    }
+
+    .btn-archive-confirm{
+        color: #E9354C;
+    }
+
+    .admin-details{
+        margin-top: 20px;
+    }
+
+    .admin-set-statuses{
+        display: flex;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
+
+    .btn-status-completed:hover{
+        color: #B5D43A;
+    }
+
+
+.btn-status-watching:hover {
+    color: #E9354C;
+}
+
+
+
+.btn-status-upcoming:hover {
+    color: #835581;
+}
+
+
+.btn-status-dismissed:hover {
+    color: #F9C30B;
+}

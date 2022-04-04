@@ -46,7 +46,7 @@ namespace SuggestionAppLibrary.DataAccess
         public async Task<List<SuggestionModel>> GetAllAprrovedSuggestions()
         {
             var result = await GetAllSuggestions();
-            return result.Where(x => x.ApprovedForRelease == true).ToList();
+            return result.Where(x => x.ApprovedForRelease == true && x.Archived==false).ToList();
         }
 
         //get from database instead of cache for the lastest data
