@@ -527,7 +527,7 @@ input-section{
 
 
 .suggestion-detail-status-watching {
-    background-color: #E9354C;
+    background-color: #ec7f7f;
     border-top-left-radius: 15px;
     border-bottom-left-radius: 15px;
 }
@@ -712,7 +712,7 @@ input-section{
 
 
 .btn-status-watching:hover {
-    color: #E9354C;
+    color: #ec7f7f;
 }
 
 

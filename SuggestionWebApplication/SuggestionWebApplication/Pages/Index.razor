@@ -32,6 +32,64 @@
     </div>
 </div>
 
+<div class="col-md-4 col-xl-3 d-block d-md-none">
+
+    @if (categories is not null && showCategory)
+    {
+        <div class="categories">
+            <span class="text-uppercase fw-bold">
+                CATEGORY
+            </span>
+            <div class="@GetSelectedCategory()" @onclick="(() => OnCategoryClick())">All</div>
+            @foreach (var c in categories)
+            {
+                <div class="@GetSelectedCategory(c.CategoryName)" @onclick="(() => OnCategoryClick(c.CategoryName))">@c.CategoryName</div>
+
+            }
+        </div>
+    }
+    else
+    {
+        <div class="categories" @onclick="(()=>showCategory=true)">
+            <span class="text-uppercase fw-bold">
+                CATEGORY:@selectedCategory
+            </span>
+        </div>
+
+
+    }
+
+</div>
+
+<div class="col-md-4 col-xl-3 d-block d-md-none">
+
+    @if (statuses is not null && showStatus)
+    {
+        <div class="statuses">
+            <span class="text-uppercase fw-bold">
+                STATUS
+            </span>
+            <div class="@GetSelectedStatus()" @onclick="(() => OnStatusClick())">All</div>
+            @foreach (var s in statuses)
+            {
+                <div class="@GetSelectedStatus(s.StatusName)" @onclick="(() => OnStatusClick(s.StatusName))">@s.StatusName</div>
+
+            }
+        </div>
+    }
+    else
+    {
+        <div class="statuses" @onclick="(()=>showStatus=true)">
+            <span class="text-uppercase fw-bold">
+                STATUS:@selectedStatus
+            </span>
+        </div>
+
+
+    }
+
+</div>
+
 <div class="row">
     <div class="col-md-8 col-xl-9">
         @if (suggestions is not null)
@@ -94,7 +152,7 @@
     </div>
 
 
-    <div class="col-md-4 col-xl-3">
+    <div class="col-md-4 col-xl-3 d-none d-md-block">
         @if (categories is not null)
         {
             <div class="categories">
@@ -143,6 +201,9 @@
     private List<StatusModel> statuses = new List<StatusModel>();
     private UserModel loggedInUser = new UserModel();
     private string none = "none";
+
+    private bool showCategory = false;
+    private bool showStatus = false;
 
     private SuggestionModel archivingSuggestion = new SuggestionModel();
 
@@ -346,6 +407,7 @@
     private async Task OnCategoryClick(string category = "All")
     {
         selectedCategory = category;
+        showCategory = false;
         await FilterSuggestions();
 
     }
@@ -354,6 +416,7 @@
     private async Task OnStatusClick(string status = "All")
     {
         selectedStatus = status;
+        showStatus = false;
         await FilterSuggestions();
 
     }

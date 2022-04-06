@@ -21,42 +21,59 @@
 
         @if (suggestion is not null)
         {
-            <div class="row suggestion-detail-row ">
-                <div class="col-11 suggestion-detail">
-                    <div>
-                        <div class="@GetVoteClass()" @onclick="(()=>Upvote(suggestion))">
-                            <div class="text-uppercase">@GetupVoteTopText(suggestion)</div>
-                            <span class="oi oi-caret-top entry-upvote"></span>
-                            <div class="text-uppercase">@GetupVoteBottomText(suggestion)</div>
-                        </div>
-                        <div class="suggestion-detail-date">
-                            @suggestion.DateCreated.ToString("MM.dd.yyyy")
-                        </div>
+        <div class="row suggestion-detail-row ">
+            <div class="col-11 suggestion-detail">
+                <div>
+                    <div class="@GetVoteClass()" @onclick="(()=>Upvote(suggestion))">
+                        <div class="text-uppercase">@GetupVoteTopText(suggestion)</div>
+                        <span class="oi oi-caret-top entry-upvote"></span>
+                        <div class="text-uppercase">@GetupVoteBottomText(suggestion)</div>
                     </div>
+                    <div class="suggestion-detail-date">
+                        @suggestion.DateCreated.ToString("MM.dd.yyyy")
+                    </div>
+                </div>
 
-                    <div class="suggestion-detail-text">
+                <div class="suggestion-detail-text">
 
-                        <div class="font-weight-bold mb-2 suggestion-detail-suggestion">
-                            @suggestion.Suggestion
+                    <div class="font-weight-bold mb-2 suggestion-detail-suggestion">
+                        @suggestion.Suggestion
+                    </div>
+                    <div class="mb-2 suggestion-detail-author">
+                        @suggestion.Author.DisplayName
+                    </div>
+                    <div class="d-none d-md-block">
+                        <div class="mb-2">
+                            @suggestion.Description
                         </div>
                         <div class="suggestion-btn-entry-text-category">
                             @suggestion.Category.CategoryName
                         </div>
-                        <div class="mb-2 suggestion-detail-author">
-                            @suggestion.Author.DisplayName
-                        </div>
-                        <div class="mb-2">
-                            @suggestion.Description
-                        </div>
                     </div>
+                </div>
 
-                </div>
-                <div class="col-1 close-button-section">
-                    <button type="button" class="close" aria-label="Close" @onclick="ClosePage">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+
             </div>
+            <div class="col-1 close-button-section">
+                <button type="button" class="close" aria-label="Close" @onclick="ClosePage">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="row d-block d-md-none ">
+                <div class="suggestion-detail-text">
+                    <div>
+                        @suggestion.Description
+                    </div>
+                    <div class="suggestion-entry-text-category">
+                        @suggestion.Category.CategoryName
+                    </div>
+                </div>
+                
+            </div>
+
+
+        </div>
 
         }
 
