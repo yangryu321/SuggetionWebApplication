@@ -340,11 +340,15 @@
                 isDirty = true;
                 loggedInUser.FirstName = firstName;
             }
-            if (lastName.Equals(loggedInUser.LastName) == false)
+            if(loggedInUser.LastName is not null)
             {
-                isDirty = true;
-                loggedInUser.LastName = lastName;
+                if (lastName.Equals(loggedInUser.LastName) == false)
+                {
+                    isDirty = true;
+                    loggedInUser.LastName = lastName;
+                }
             }
+
             if (displayName.Equals(loggedInUser.DisplayName) == false)
             {
                 isDirty = true;

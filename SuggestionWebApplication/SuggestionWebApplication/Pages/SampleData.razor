@@ -1,5 +1,5 @@
 ﻿@page "/SampleData"
-
+@attribute [Authorize(policy: "Admin")]
 @using SuggestionAppLibrary.DataAccess
 @using SuggestionAppLibrary.Models
 

@@ -257,15 +257,24 @@
             return "suggestion-detail-no-votes";
 
         }
-
-        if (suggestion.UserVotes.Contains(loggedInUser.Id))
+        if(loggedInUser is not null)
         {
-            return "suggestion-detail-voted";
+            if (suggestion.UserVotes.Contains(loggedInUser.Id))
+            {
+                return "suggestion-detail-voted";
+            }
+            else
+            {
+                return "suggestion-detail-not-voted";
+            }
+
+
         }
         else
         {
             return "suggestion-detail-not-voted";
         }
+
 
 
     }
