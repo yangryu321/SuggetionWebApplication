@@ -168,7 +168,7 @@ namespace SuggestionAppLibrary.DataAccess
 
         public async Task<List<SuggestionModel>> GetSuggestionsByUser(string userId)
         {
-            var result = _cache.Get<List<SuggestionModel>>(userId);
+            var result = _cache.Get<List<SuggestionModel>>(cacheName);
 
             if (result ==null)
             {
