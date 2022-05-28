@@ -1,4 +1,4 @@
-# Street Fighter 6 Wishlist Web
+# Street Fighter VI Wishlist Website
 -A wishlist site with Blazor server side and MongoDB
 -authentication: Azure Directory B2C
 
