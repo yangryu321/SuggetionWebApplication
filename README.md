@@ -46,14 +46,13 @@ experience I like Blazor the best. Combining it with Azure AD B2C makes the whol
 It is my first time using NoSQL database. I really like it even though I didn't take advantage of EF core's </br >
 features like scaffolding and  migration. It feels more like using Dapper with SQL to me and I like Dapper a lot. The overall use </br >
 of mongoDB is easier than using SQL. You dont have to worry about duplicated data as long as it's not too absurd. I think I'll use MongoDB more
-from now on if I build something from scratch and not worry too much of it being rational or not.<br/>
+from now on if I build something from scratch and not want to worry too much of it being rational or not.<br/>
 
 ## *About Auth* :
-First time using a third-party authentication system. It is way easier to configure than using the built-in authentication system </br >
+First time using a third-party authentication system. It is easier to configure than using the built-in authentication system </br >
 (Even though the set up part on Azure is kinda messy). The coding part is especially easier than implementing JWT from scratch by myself. </br >
 The only thing I think users wouldn't like about it is the system UI. It looks very Microsoft and not custom enough even though you can change </br >
-the icon and background picture. But overall it's really handy for a project built from scratch. You dont have to worry too much </br >
-about authorization and security as it is being handled by Microsoft.
+the icon and background picture. But overall it's really handy if you build a project from scratch and want something easier and faster. </br >You dont have to worry too much about authorization and security as it is being handled by Microsoft.
 <br>
 <br>
 
@@ -62,14 +61,18 @@ about authorization and security as it is being handled by Microsoft.
 Learned a lot from building this website. Struggled for a while to deploy it online but eventually figured it out after three days. </br>
 Compared to Razor Page and MVC I think I like Blazor the best because it's really fast and straightforward. </br> 
 I also like Azure AD B2C, the downside is that it's not free after a year and it handles 50000 monthly with the free tier azure (more than enough </br>
-for my website :rofl:). MongoDB is nice too as there is no more DBContext stuff all you need is a dependency injection using a mongoDB client.
+for my website :rofl:). MongoDB is nice too as there is no more DBContext stuff all you need is a dependency injection using a mongoDB client.</br >
+I did implement responsive design in this website but somehow the virtualize box is not working properly. Have to fix that later so for now just </br >
+use the desktop version lol
+
 
 
 
 
 <br/><a href="https://sf6wishlist.azurewebsites.net/" target="_blank">Go to the website</a> <br/>
-*(Please give it 15 to 30 seconds to load the website and database as it is being hosted on free tier Azure and Atlas, <br>
-Please sign up to leave your ideas about what you want in Street Figter VI if you like the series :blush:)*
+*(Please open the website on your computer and give it 15 to 30 seconds to load the website and database as it is being hosted on <br>
+free tier Azure and Atlas. Please sign up to leave your ideas about what you want in Street Fighter VI if you like the series. :blush: <br> 
+The mobile version is still in development.)*
 <br>
 <br>
 
