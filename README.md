@@ -1,5 +1,6 @@
 # Street Fighter VI Wishlist Website
-A wishlist website for the upcoming (2022?:expressionless:) video game Street Fighter VI.
+A wishlist website for the upcoming (2022?:expressionless:) video game Street Fighter VI. <br/>
+Update: It's coming in 2023, let's go. :scream:
 
 <br>
 <br>
