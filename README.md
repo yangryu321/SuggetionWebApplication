@@ -24,7 +24,7 @@ Update: It's coming in 2023, let's go. :scream:
 ## About the website
 Tools I used to build the website: </br>
 *Full-stack framework* : asp.net core Blazor server side. </br>
-*Data-base* : MongoDB Atlas. <br/>
+*Database* : MongoDB Atlas. <br/>
 *Hosting* : Azure. <br />
 *Authentication* : Azure AD B2C <br/>
 *Other tools* : Bootstrap 4, etc. <br />
