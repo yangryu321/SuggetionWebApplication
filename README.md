@@ -41,8 +41,8 @@ web development. What I really like about blazor is first the routing. It is ver
 I also like how you can use razor components where you can inject classes at the top of the pape to simplify <br/>
 coding process. Having frontend code and c# code on the same page makes it easier for me to debug ( Of course<br/>
 you can put the c# code in another file to make it look like the razor page infrastructure). MVC and razor page <br/>
-make you understand better about how asp.net core works, but when it comes to overall development experience I like <br/>
-Blazor the best. Combining it with Azure AD B2C makes the whole development process faster and easier. </br >
+make you understand better about how asp.net core works, but when it comes to overall development experience I <br/>
+like Blazor the best. Combining it with Azure AD B2C makes the whole development process faster and easier. </br >
 
 ### *About database*  : 
 It is my first time using NoSQL database. I really like it even though I didn't take advantage of EF core's </br >
